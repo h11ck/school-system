@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ t.attendance }}</title>
+</head>
+<body>
+
+<h1>{{ t.attendance }} - {{ today }}</h1>
+
+{% if message %}
+    <p>{{ message }}</p>
+{% endif %}
+
+<form method="GET">
+    <label>Select date:</label>
+    <input type="date" name="date" value="{{ today }}">
+    <button type="submit">View</button>
+</form>
+
+<br>
+
+<form method="POST">
+
+    {% for student in students %}
+        <div>
+            <label>
+                <input type="checkbox" name="absent_{{ student[0] }}">
+                {{ student[1] }}
+            </label>
+        </div>
+    {% endfor %}
+
+    <br>
+    <button type="submit">{{ t.save }}</button>
+
+</form>
+
+<h2>{{ t.today_records }}</h2>
+
+<ul>
+    {% for record in records %}
+        <li>{{ record[0] }} - {{ record[1] }}</li>
+    {% endfor %}
+</ul>
+
+<a href="/">{{ t.back }}</a>
+
+</body>
+</html>
