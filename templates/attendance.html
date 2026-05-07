@@ -1,49 +1,90 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ t.attendance }}</title>
+    <title>Attendance</title>
 </head>
 <body>
 
-<h1>{{ t.attendance }} - {{ today }}</h1>
+<h1>
+    {{ t.attendance }} - {{ today }}
+</h1>
 
 {% if message %}
     <p>{{ message }}</p>
 {% endif %}
 
+<!-- DATE FILTER -->
 <form method="GET">
+
     <label>Select date:</label>
-    <input type="date" name="date" value="{{ today }}">
-    <button type="submit">View</button>
+
+    <input
+        type="date"
+        name="date"
+        value="{{ today }}"
+    >
+
+    <button type="submit">
+        View
+    </button>
+
 </form>
 
-<br>
+<hr>
 
+<!-- ATTENDANCE FORM -->
 <form method="POST">
 
     {% for student in students %}
+
         <div>
+
             <label>
-                <input type="checkbox" name="absent_{{ student[0] }}">
-                {{ student[1] }}
+
+                <input
+                    type="checkbox"
+                    name="absent_{{ student.id }}"
+                >
+
+                {{ student.name }}
+
             </label>
+
         </div>
+
     {% endfor %}
 
     <br>
-    <button type="submit">{{ t.save }}</button>
+
+    <button type="submit">
+        Save Attendance
+    </button>
 
 </form>
 
-<h2>{{ t.today_records }}</h2>
+<hr>
+
+<h2>Attendance Records</h2>
 
 <ul>
+
     {% for record in records %}
-        <li>{{ record[0] }} - {{ record[1] }}</li>
+
+        <li>
+            Student ID: {{ record.student_id }}
+            -
+            {{ record.status }}
+        </li>
+
     {% endfor %}
+
 </ul>
 
-<a href="/">{{ t.back }}</a>
+<br>
+
+<a href="/">
+    Back
+</a>
 
 </body>
 </html>

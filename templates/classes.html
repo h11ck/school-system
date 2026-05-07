@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Classes</title>
+</head>
+<body>
+
+<h1>Classes</h1>
+
+<form method="POST">
+
+    <input
+        type="text"
+        name="name"
+        placeholder="Class name"
+        required
+    >
+
+    <button type="submit">
+        Add
+    </button>
+
+</form>
+
+<hr>
+
+<ul>
+    {% for class_item in classes %}
+        <li>
+            {{ class_item.name }}
+        </li>
+    {% endfor %}
+</ul>
+
+<br>
+
+<a href="/">
+    Back
+</a>
+
+</body>
+</html>

@@ -1,14 +1,19 @@
+from models import db, Student, Attendance, SchoolClass
 from flask import Flask, render_template, request, redirect
-import sqlite3
 from datetime import date
 from translations import translations
 
 app = Flask(__name__)
 
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://school_user:123456@localhost/school_system"
+
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db.init_app(app)
+
 LANG = "en"
 
-def connect_db():
-    return sqlite3.connect("database.db")
+
 
 # ---------------- HOME ----------------
 @app.route("/")
@@ -16,29 +21,38 @@ def index():
     return render_template("index.html", t=translations[LANG])
 
 # ---------------- STUDENTS ----------------
+# ---------------- STUDENTS ----------------
 @app.route("/students", methods=["GET", "POST"])
 def students():
-    conn = connect_db()
-    cursor = conn.cursor()
 
     if request.method == "POST":
+
         name = request.form["name"]
-        cursor.execute("INSERT INTO students (name) VALUES (?)", (name,))
-        conn.commit()
-        return redirect("/students")
+        class_id = request.form["class_id"]
 
-    cursor.execute("SELECT * FROM students")
-    student_list = cursor.fetchall()
+        new_student = Student(
+            name=name,
+            class_id=class_id
+        )
 
-    conn.close()
+        db.session.add(new_student)
+        db.session.commit()
 
-    return render_template("students.html", students=student_list, t=translations[LANG])
+    student_list = Student.query.all()
 
+    class_list = SchoolClass.query.all()
+
+    return render_template(
+        "students.html",
+        students=student_list,
+        classes=class_list,
+        t=translations[LANG]
+    )
+
+# ---------------- ATTENDANCE ----------------
 # ---------------- ATTENDANCE ----------------
 @app.route("/attendance", methods=["GET", "POST"])
 def attendance():
-    conn = connect_db()
-    cursor = conn.cursor()
 
     selected_date = request.args.get("date")
 
@@ -46,65 +60,79 @@ def attendance():
         today = selected_date
     else:
         today = date.today().isoformat()
-        message = None
 
-    cursor.execute("SELECT * FROM students")
-    students = cursor.fetchall()
+    message = None
 
+    students = Student.query.all()
+
+    # ---------------- SAVE ATTENDANCE ----------------
     if request.method == "POST":
-        
-        # 🔒 BLOQUEIO AQUI (ANTES DE SALVAR)
+
+        # block old dates
         if today != date.today().isoformat():
             message = "You can only register attendance for today"
+
         else:
-            # 🔥 SÓ ENTRA AQUI SE FOR HOJE
-            
+
             for student in students:
-                student_id = student[0]
 
-                field_name = f"absent_{student_id}"
+                field_name = f"absent_{student.id}"
 
-                # se checkbox estiver marcado → absent #
                 if request.form.get(field_name):
                     status = "absent"
                 else:
                     status = "present"
 
-                try:
-                    cursor.execute("""
-                    INSERT INTO attendance (student_id, date, status)
-                    VALUES (?, ?, ?)
-                    """, (student_id, today, status))
+                # prevent duplicate attendance
+                existing = Attendance.query.filter_by(
+                    student_id=student.id,
+                    date=today
+                ).first()
 
-                except sqlite3.IntegrityError:
-                    pass
+                if not existing:
 
-    conn.commit()
-    message = "Attendance saved successfully"
+                    new_attendance = Attendance(
+                        student_id=student.id,
+                        date=today,
+                        status=status
+                    )
 
+                    db.session.add(new_attendance)
 
-    cursor.execute("SELECT * FROM students")
-    students = cursor.fetchall()
+            db.session.commit()
 
-    cursor.execute("""
-    SELECT students.name, attendance.status
-    FROM attendance
-    JOIN students ON attendance.student_id = students.id
-    WHERE date = ?
-    """, (today,))
+            message = "Attendance saved successfully"
 
-    records = cursor.fetchall()
-
-    conn.close()
+    # ---------------- HISTORY ----------------
+    records = Attendance.query.filter_by(date=today).all()
 
     return render_template(
-        
         "attendance.html",
         students=students,
         records=records,
         today=today,
-        t=translations[LANG],
-        message=message
+        message=message,
+        t=translations[LANG]
+    )
+
+# ---------------- CLASSES ----------------
+@app.route("/classes", methods=["GET", "POST"])
+def classes():
+
+    if request.method == "POST":
+        name = request.form["name"]
+
+        new_class = SchoolClass(name=name)
+
+        db.session.add(new_class)
+        db.session.commit()
+
+    class_list = SchoolClass.query.all()
+
+    return render_template(
+        "classes.html",
+        classes=class_list,
+        t=translations[LANG]
     )
 
 # ---------------- RUN ----------------
