@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Subjects</title>
+</head>
+<body>
+
+<h1>Subjects</h1>
+
+<form method="POST">
+
+    <input
+        type="text"
+        name="name"
+        placeholder="Subject name"
+        required
+    >
+
+    <button type="submit">
+        Add
+    </button>
+
+</form>
+
+<hr>
+
+<ul>
+
+    {% for subject in subjects %}
+
+        <li>
+            {{ subject.name }}
+        </li>
+
+    {% endfor %}
+
+</ul>
+
+<br>
+
+<a href="/">
+    Back
+</a>
+
+</body>
+</html>

@@ -71,7 +71,11 @@
     {% for record in records %}
 
         <li>
-            Student ID: {{ record.student_id }}
+            Student ID: {{ record.student.name }}
+            -
+            {{ record.student.name }}
+            -
+            {{ record.student.school_class.name }}
             -
             {{ record.status }}
         </li>
