@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 
-import StudentForm from "../components/StudentForm";
-import StudentList from "../components/StudentList";
-
 import {
     getStudents,
     createStudent,
-    getClasses
+    getClasses,
+    deleteStudent
 } from "../services/api";
+
+import StudentForm from "../components/StudentForm";
+import StudentList from "../components/StudentList";
+
+import "./styles/students-page.css";
 
 
 function StudentsPage() {
@@ -19,6 +22,10 @@ function StudentsPage() {
     const [name, setName] = useState("");
 
     const [classId, setClassId] = useState("");
+
+    const [loading, setLoading] = useState(false);
+
+    const [error, setError] = useState("");
 
 
 
@@ -39,47 +46,120 @@ function StudentsPage() {
     }
 
 
+
     useEffect(() => {
 
-    async function fetchData() {
+        async function fetchData() {
 
-        await loadStudents();
+            await loadStudents();
 
-        await loadClasses();
+            await loadClasses();
+        }
 
-    }
+        fetchData();
 
-    fetchData();
+    }, []);
 
-}, []);
+
 
 
     async function handleSubmit(event) {
 
         event.preventDefault();
 
-        await createStudent({
+        try {
 
-            name: name,
-            class_id: classId
+            setLoading(true);
 
-        });
+            setError("");
 
-        loadStudents();
+            await createStudent({
 
-        setName("");
-        setClassId("");
+                name: name,
+                class_id: classId
+
+            });
+
+            await loadStudents();
+
+            setName("");
+
+            setClassId("");
+
+        } 
+        
+        catch {
+
+            setError("Failed to create student.");
+
+        } 
+        
+        finally {
+
+            setLoading(false);
+        }
+    }
+
+
+
+    async function handleDelete(studentId) {
+
+        const confirmed = window.confirm(
+
+            "Are you sure you want to delete this student?"
+        );
+
+        if (!confirmed) {
+
+            return;
+        }
+
+        try {
+
+            setLoading(true);
+
+            setError("");
+
+            await deleteStudent(studentId);
+
+            await loadStudents();
+
+        } 
+        
+        catch {
+
+            setError("Failed to delete student.");
+
+        } 
+        
+        finally {
+
+            setLoading(false);
+        }
     }
 
 
 
     return (
 
-        <div>
+        <div className="students-page">
 
-            <h1>Students</h1>
+            <h1 className="page-title">
+                Students
+            </h1>
+
+    {error && (
+
+        <div className="error-message">
+
+            {error}
+
+        </div>
+    )}
 
             <StudentForm
+
+                loading={loading}
 
                 name={name}
                 setName={setName}
@@ -91,14 +171,15 @@ function StudentsPage() {
 
                 handleSubmit={handleSubmit}
 
+
             />
 
             <StudentList
                 students={students}
+                handleDelete={handleDelete}
             />
 
         </div>
-
     );
 }
 

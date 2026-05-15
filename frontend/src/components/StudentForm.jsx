@@ -1,70 +1,90 @@
+import "./styles/student-form.css";
+
+
 function StudentForm({
 
+    loading,
+
     name,
+
     setName,
 
     classId,
+
     setClassId,
 
     classes,
 
-    handleSubmit
+    handleSubmit,
 
 }) {
 
     return (
 
-        <div>
+        <form
+            className="student-form"
+            onSubmit={handleSubmit}
+        >
 
-            <h2>Create Student</h2>
+            <input
 
-            <form onSubmit={handleSubmit}>
+                type="text"
 
-                <input
-                    type="text"
-                    placeholder="Student name"
-                    value={name}
-                    onChange={(event) => setName(event.target.value)}
-                />
+                placeholder="Student name"
 
-                <br />
-                <br />
+                value={name}
 
-                <select
-                    value={classId}
-                    onChange={(event) => setClassId(event.target.value)}
-                >
+                onChange={(event) =>
+                    setName(event.target.value)
+                }
+            />
 
-                    <option value="">
-                        Select a class
+
+
+            <select
+
+                value={classId}
+
+                onChange={(event) =>
+                    setClassId(event.target.value)
+                }
+            >
+
+                <option value="">
+                    Select a class
+                </option>
+
+                {classes.map((schoolClass) => (
+
+                    <option
+                        key={schoolClass.id}
+                        value={schoolClass.id}
+                    >
+
+                        {schoolClass.name}
+
                     </option>
 
-                    {classes.map((schoolClass) => (
+                ))}
 
-                        <option
-                            key={schoolClass.id}
-                            value={schoolClass.id}
-                        >
+            </select>
 
-                            {schoolClass.name}
 
-                        </option>
 
-                    ))}
+            <button
+                type="submit"
 
-                </select>
+                disabled={loading}
+            >
 
-                <br />
-                <br />
+                {loading
+                    ? "Loading..."
+                    : "Add Student"
+                }
 
-                <button type="submit">
-                    Create Student
-                </button>
+            </button>
 
-            </form>
-
-        </div>
-
+        </form>
     );
 }
 

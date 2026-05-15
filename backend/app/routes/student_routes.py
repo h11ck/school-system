@@ -6,14 +6,14 @@ from flask import (
 
 from backend.app.services.student_service import (
     get_all_students,
-    create_student
+    create_student,
+    delete_student_by_id
 )
 
 student_bp = Blueprint(
     "students",
     __name__
 )
-
 
 @student_bp.route("/api/students", methods=["GET"])
 def get_students():
@@ -31,18 +31,32 @@ def add_student():
     name = data.get("name")
     class_id = data.get("class_id")
 
-    if not name:
-
-        return jsonify({
-            "error": "Name is required"
-        }), 400
-
-    student_id = create_student(
+    result = create_student(
         name,
         class_id
     )
+    
+    if "error" in result:
+
+        return jsonify(result), 400
+    
 
     return jsonify({
+
         "message": "Student created successfully",
-        "student_id": student_id
+
+        "student_id": result
+
     }), 201
+    
+    
+@student_bp.route("/api/students/<int:student_id>", methods=["DELETE"])
+def delete_student(student_id):
+
+    delete_student_by_id(student_id)
+
+    return jsonify({
+
+        "message": "Student deleted successfully"
+
+    }), 200

@@ -1,0 +1,66 @@
+.student-list {
+
+    background: white;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.student-table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+.student-table thead {
+
+    background: #e2e8f0;
+}
+
+.student-table th,
+.student-table td {
+
+    padding: 16px;
+
+    text-align: left;
+
+    border-bottom: 1px solid #eee;
+}
+
+.student-table tbody tr:hover {
+
+    background: #f8fafc;
+}
+
+.empty-message {
+
+    padding: 24px;
+
+    text-align: center;
+
+    color: #666;
+}
+
+.action-button {
+
+    border: none;
+
+    padding: 8px 14px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+}
+
+.delete-button {
+
+    background: #dc2626;
+
+    color: white;
+}

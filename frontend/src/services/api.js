@@ -43,3 +43,17 @@ export async function getClasses() {
 
     return response.json();
 }
+
+export async function deleteStudent(studentId) {
+
+    const response = await fetch(
+
+        `http://127.0.0.1:5000/api/students/${studentId}`,
+
+        {
+            method: "DELETE"
+        }
+    );
+
+    return response.json();
+}

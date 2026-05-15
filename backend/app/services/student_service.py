@@ -1,5 +1,24 @@
 from backend.app.database.connection import get_connection
 
+def validate_student_data(name, class_id):
+
+    if not name:
+
+        return "Name is required"
+
+    if len(name.strip()) < 2:
+
+        return "Name must contain at least 2 characters"
+
+    if not class_id:
+
+        return "Class ID is required"
+
+    if not isinstance(class_id, int):
+
+        return "Class ID must be an integer"
+
+    return None
 
 def get_all_students():
 
@@ -36,6 +55,20 @@ def get_all_students():
 
 def create_student(name, class_id):
 
+    validation_error = validate_student_data(
+
+    name,
+    class_id
+)
+
+    if validation_error:
+
+        return {
+
+            "error": validation_error
+
+        }
+
     connection = get_connection()
 
     cursor = connection.cursor()
@@ -57,3 +90,25 @@ def create_student(name, class_id):
     connection.close()
 
     return student_id
+
+def delete_student_by_id(student_id):
+
+    connection = get_db_connection()
+
+    cursor = connection.cursor()
+
+    cursor.execute(
+
+        """
+        DELETE FROM students
+        WHERE id = %s
+        """,
+
+        (student_id,)
+    )
+
+    connection.commit()
+
+    cursor.close()
+
+    connection.close()

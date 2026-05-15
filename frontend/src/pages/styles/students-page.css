@@ -1,0 +1,28 @@
+.students-page {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 30px;
+}
+
+.page-title {
+
+    font-size: 32px;
+
+    font-weight: bold;
+}
+
+.error-message {
+
+    background: #fee2e2;
+
+    color: #991b1b;
+
+    padding: 14px;
+
+    border-radius: 8px;
+
+    font-weight: bold;
+}

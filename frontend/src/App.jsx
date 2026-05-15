@@ -1,9 +1,10 @@
 import {
     BrowserRouter,
     Routes,
-    Route,
-    Link
+    Route
 } from "react-router-dom";
+
+import Layout from "./components/Layout";
 
 import StudentsPage from "./pages/StudentsPage";
 import ClassesPage from "./pages/ClassesPage";
@@ -15,23 +16,7 @@ function App() {
 
         <BrowserRouter>
 
-            <div>
-
-                <nav>
-
-                    <Link to="/">
-                        Students
-                    </Link>
-
-                    {" | "}
-
-                    <Link to="/classes">
-                        Classes
-                    </Link>
-
-                </nav>
-
-                <hr />
+            <Layout>
 
                 <Routes>
 
@@ -51,8 +36,8 @@ function App() {
                     />
 
                 </Routes>
-        
-            </div>
+
+            </Layout>
 
         </BrowserRouter>
 
