@@ -93,7 +93,7 @@ def create_student(name, class_id):
 
 def delete_student_by_id(student_id):
 
-    connection = get_db_connection()
+    connection = get_connection()
 
     cursor = connection.cursor()
 
@@ -112,3 +112,44 @@ def delete_student_by_id(student_id):
     cursor.close()
 
     connection.close()
+    
+def update_student(student_id, name, class_id):
+
+    validation_error = validate_student_data(
+        name,
+        class_id
+    )
+
+    if validation_error:
+
+        return {
+            "error": validation_error
+        }
+
+    connection = get_connection()
+
+    cursor = connection.cursor()
+
+    cursor.execute(
+        """
+        UPDATE students
+        SET
+            name = %s,
+            class_id = %s
+        WHERE id = %s
+        """,
+        (
+            name,
+            class_id,
+            student_id
+        )
+    )
+
+    connection.commit()
+
+    cursor.close()
+    connection.close()
+
+    return {
+        "message": "Student updated successfully"
+    }
