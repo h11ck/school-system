@@ -5,6 +5,8 @@ function StudentForm({
 
     loading,
 
+    editingStudentId,
+
     name,
 
     setName,
@@ -46,7 +48,7 @@ function StudentForm({
                 value={classId}
 
                 onChange={(event) =>
-                    setClassId(event.target.value)
+                    setClassId(Number(event.target.value))
                 }
             >
 
@@ -79,7 +81,10 @@ function StudentForm({
 
                 {loading
                     ? "Loading..."
-                    : "Add Student"
+                    : editingStudentId
+                        ? "Update Student"
+                        : "Add Student"
+                        
                 }
 
             </button>

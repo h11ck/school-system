@@ -5,7 +5,9 @@ function StudentList({
 
     students,
 
-    handleDelete
+    handleDelete,
+
+    handleEdit
 
 }) {
 
@@ -69,24 +71,33 @@ function StudentList({
                                 {student.class_name || "No class"}
                             </td>
 
-                            <td>
+            <td>
+
 
                 <button
                     className="
                         action-button
-                        delete-button
+                        edit-button
                     "
 
                     onClick={() =>
-                        handleDelete(student.id)
+                        handleEdit(student)
                     }
+                >
+
+                    Edit
+
+                </button>
+                <button
+                    className="action-button delete-button"
+                    onClick={() => handleDelete(student.id)}
                 >
 
                     Delete
 
                 </button>
 
-                            </td>
+            </td>
 
                         </tr>
 

@@ -4,7 +4,9 @@ import {
     getStudents,
     createStudent,
     getClasses,
-    deleteStudent
+    deleteStudent,
+    updateStudent
+    
 } from "../services/api";
 
 import StudentForm from "../components/StudentForm";
@@ -22,6 +24,8 @@ function StudentsPage() {
     const [name, setName] = useState("");
 
     const [classId, setClassId] = useState("");
+
+    const [editingStudentId, setEditingStudentId] = useState(null);
 
     const [loading, setLoading] = useState(false);
 
@@ -73,20 +77,41 @@ function StudentsPage() {
 
             setError("");
 
-            await createStudent({
+            if (editingStudentId) {
 
-                name: name,
-                class_id: classId
+                await updateStudent(
 
-            });
+                    editingStudentId,
+
+                    {
+                        name: name,
+                        class_id: classId
+                    }
+
+                );
+
+            } else {
+                
+                await createStudent({
+
+                    name: name,
+                    class_id: classId
+
+                });
+
+            }
 
             await loadStudents();
+
+            setEditingStudentId(null);
 
             setName("");
 
             setClassId("");
 
-        } 
+        }
+
+
         
         catch {
 
@@ -138,7 +163,14 @@ function StudentsPage() {
         }
     }
 
+    function handleEdit(student) {
 
+        setEditingStudentId(student.id);
+
+        setName(student.name);
+
+        setClassId(student.class_id);
+    }
 
     return (
 
@@ -157,6 +189,16 @@ function StudentsPage() {
         </div>
     )}
 
+            {editingStudentId && (
+
+                <h3>
+
+                    Editing student #{editingStudentId}
+
+                </h3>
+
+            )}
+            
             <StudentForm
 
                 loading={loading}
@@ -171,12 +213,14 @@ function StudentsPage() {
 
                 handleSubmit={handleSubmit}
 
+                editingStudentId={editingStudentId}
 
             />
 
             <StudentList
                 students={students}
                 handleDelete={handleDelete}
+                handleEdit={handleEdit}
             />
 
         </div>
