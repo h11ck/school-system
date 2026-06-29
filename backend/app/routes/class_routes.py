@@ -6,7 +6,9 @@ from flask import (
 
 from backend.app.services.class_service import (
     get_all_classes,
-    create_class
+    create_class,
+    update_class,
+    delete_class_by_id
 )
 
 class_bp = Blueprint(
@@ -30,15 +32,45 @@ def add_class():
 
     name = data.get("name")
 
-    if not name:
+    result = create_class(name)
 
-        return jsonify({
-            "error": "Class name is required"
-        }), 400
+    if isinstance(result, dict) and "error" in result:
 
-    class_id = create_class(name)
+        return jsonify(result), 400
 
     return jsonify({
+
         "message": "Class created successfully",
-        "class_id": class_id
+
+        "class_id": result
+
     }), 201
+    
+@class_bp.route("/api/classes/<int:class_id>", methods=["PUT"])
+def edit_class(class_id):
+
+    data = request.get_json()
+
+    name = data.get("name")
+
+    result = update_class(
+        class_id,
+        name
+    )
+
+    if isinstance(result, dict) and "error" in result:
+
+        return jsonify(result), 400
+
+    return jsonify(result), 200
+
+@class_bp.route("/api/classes/<int:class_id>", methods=["DELETE"])
+def delete_class(class_id):
+
+    delete_class_by_id(class_id)
+
+    return jsonify({
+
+        "message": "Class deleted successfully"
+
+    }), 200
