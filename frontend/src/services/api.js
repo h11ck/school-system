@@ -8,7 +8,15 @@ export async function getStudents() {
         `${API_URL}/students`
     );
 
-    return response.json();
+    const data = await response.json();
+
+    if (!response.ok) {
+
+        throw new Error(data.error);
+
+    }  
+
+    return data;
 }
 
 
@@ -30,7 +38,15 @@ export async function createStudent(studentData) {
         }
     );
 
-    return response.json();
+    const data = await response.json();
+
+    if (!response.ok) {
+
+        throw new Error(data.error);
+
+    }  
+
+    return data;
 }
 
 
@@ -41,7 +57,15 @@ export async function getClasses() {
         `${API_URL}/classes`
     );
 
-    return response.json();
+    const data = await response.json();
+
+    if (!response.ok) {
+
+        throw new Error(data.error);
+
+    }  
+
+    return data;
 }
 
 export async function deleteStudent(studentId) {
@@ -55,7 +79,15 @@ export async function deleteStudent(studentId) {
         }
     );
 
-    return response.json();
+    const data = await response.json();
+
+    if (!response.ok) {
+
+        throw new Error(data.error);
+
+    }  
+
+    return data;
 }
 
 
@@ -76,5 +108,106 @@ export async function updateStudent(studentId, studentData) {
         }
     );
 
-    return response.json();
+    const data = await response.json();
+
+    if (!response.ok) {
+
+        throw new Error(data.error);
+
+    }  
+
+    return data;
+}
+
+export async function createClass(classData) {
+
+    const response = await fetch(
+
+        `${API_URL}/classes`,
+
+        {
+
+            method: "POST",
+
+            headers: {
+
+                "Content-Type": "application/json"
+
+            },
+
+            body: JSON.stringify(classData)
+
+        }
+
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+
+        throw new Error(data.error);
+
+    }  
+
+    return data;
+}
+
+
+export async function updateClass(classId, classData) {
+
+    const response = await fetch(
+
+        `${API_URL}/classes/${classId}`,
+
+        {
+
+            method: "PUT",
+
+            headers: {
+
+                "Content-Type": "application/json"
+
+            },
+
+            body: JSON.stringify(classData)
+
+        }
+
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+
+        throw new Error(data.error);
+
+    }  
+
+    return data;
+}
+
+
+export async function deleteClass(classId) {
+
+    const response = await fetch(
+
+        `${API_URL}/classes/${classId}`,
+
+        {
+
+            method: "DELETE"
+
+        }
+
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+
+        throw new Error(data.error);
+
+    }  
+
+    return data;
 }

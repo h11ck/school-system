@@ -11,6 +11,7 @@ import {
 
 import StudentForm from "../components/StudentForm";
 import StudentList from "../components/StudentList";
+import Alert from "../components/Alert";
 
 import "./styles/students-page.css";
 
@@ -113,11 +114,11 @@ function StudentsPage() {
 
 
         
-        catch {
+        catch (error) {
 
-            setError("Failed to create student.");
+            setError(error.message);
 
-        } 
+        }
         
         finally {
 
@@ -151,11 +152,11 @@ function StudentsPage() {
 
         } 
         
-        catch {
+        catch (error) {
 
-            setError("Failed to delete student.");
+            setError(error.message);
 
-        } 
+        }
         
         finally {
 
@@ -180,14 +181,11 @@ function StudentsPage() {
                 Students
             </h1>
 
-    {error && (
+    <Alert
 
-        <div className="error-message">
+        message={error}
 
-            {error}
-
-        </div>
-    )}
+    />
 
             {editingStudentId && (
 
