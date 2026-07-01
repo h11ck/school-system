@@ -12,6 +12,7 @@ import {
 import StudentForm from "../components/StudentForm";
 import StudentList from "../components/StudentList";
 import Alert from "../components/Alert";
+import useApiState from "../hooks/useApiState";
 
 import "./styles/students-page.css";
 
@@ -28,17 +29,32 @@ function StudentsPage() {
 
     const [editingStudentId, setEditingStudentId] = useState(null);
 
-    const [loading, setLoading] = useState(false);
+    const [search, setSearch] = useState("");
 
-    const [error, setError] = useState("");
+    const [sortField, setSortField] = useState("id");
 
+    const [sortDirection, setSortDirection] = useState("asc");
 
+    const {
 
-    async function loadStudents() {
+        loading,
 
-        const data = await getStudents();
+        setLoading,
+
+        error,
+
+        setError,
+
+        clearError
+
+    } = useApiState();
+
+    async function loadStudents(search = "") {
+
+        const data = await getStudents(search);
 
         setStudents(data);
+
     }
 
 
@@ -76,7 +92,7 @@ function StudentsPage() {
 
             setLoading(true);
 
-            setError("");
+            clearError();
 
             if (editingStudentId) {
 
@@ -144,7 +160,7 @@ function StudentsPage() {
 
             setLoading(true);
 
-            setError("");
+            clearError();
 
             await deleteStudent(studentId);
 
@@ -215,7 +231,27 @@ function StudentsPage() {
 
             />
 
-            <StudentList
+            <input
+
+                type="text"
+
+                placeholder="Search student..."
+
+                value={search}
+
+                onChange={(event) => {
+
+                    const value = event.target.value;
+
+                    setSearch(value);
+
+                    loadStudents(value);
+
+                }}
+
+            />
+
+           <StudentList
                 students={students}
                 handleDelete={handleDelete}
                 handleEdit={handleEdit}

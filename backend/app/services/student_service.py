@@ -20,20 +20,39 @@ def validate_student_data(name, class_id):
 
     return None
 
-def get_all_students():
+def get_all_students(search=None):
 
     connection = get_connection()
 
     cursor = connection.cursor()
 
-    cursor.execute("""
+    if search:
+
+    cursor.execute(
+        """
         SELECT
             id,
             name,
             class_id
         FROM students
+        WHERE LOWER(name) LIKE LOWER(%s)
         ORDER BY id
-    """)
+        """,
+        (f"%{search}%",)
+    )
+
+    else:
+
+        cursor.execute(
+            """
+            SELECT
+                id,
+                name,
+                class_id
+            FROM students
+            ORDER BY id
+            """
+        )
 
     students = cursor.fetchall()
 

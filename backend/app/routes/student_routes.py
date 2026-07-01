@@ -19,7 +19,9 @@ student_bp = Blueprint(
 @student_bp.route("/api/students", methods=["GET"])
 def get_students():
 
-    students = get_all_students()
+    search = request.args.get("search")
+
+    students = get_all_students(search)
 
     return jsonify(students)
 

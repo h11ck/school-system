@@ -12,6 +12,7 @@ import {
 import ClassForm from "../components/ClassForm";
 import ClassList from "../components/ClassList";
 import Alert from "../components/Alert";
+import useApiState from "../hooks/useApiState";
 
 function ClassesPage() {
 
@@ -21,9 +22,19 @@ function ClassesPage() {
 
     const [editingClassId, setEditingClassId] = useState(null);
 
-    const [loading, setLoading] = useState(false);
+    const {
 
-    const [error, setError] = useState("");
+        loading,
+
+        setLoading,
+
+        error,
+
+        setError,
+
+        clearError
+
+    } = useApiState();
 
 
 
@@ -53,7 +64,7 @@ function ClassesPage() {
 
             setLoading(true);
 
-            setError("");
+            clearError("");
 
             if (editingClassId) {
 
@@ -91,7 +102,7 @@ function ClassesPage() {
 
         catch (error) {
 
-            setError(error.message);
+            clearError(error.message);
 
         }
 
@@ -141,7 +152,7 @@ function ClassesPage() {
 
             setLoading(true);
 
-            setError("");
+            clearError("");
 
             await deleteClass(classId);
 
@@ -151,7 +162,7 @@ function ClassesPage() {
 
         catch (error) {
 
-            setError(error.message);
+            clearError(error.message);
 
         }
 

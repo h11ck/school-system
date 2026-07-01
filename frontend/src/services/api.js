@@ -2,23 +2,17 @@ const API_URL = "http://127.0.0.1:5000/api";
 
 
 
-export async function getStudents() {
+export async function getStudents(search = "") {
 
     const response = await fetch(
-        `${API_URL}/students`
+
+        `${API_URL}/students?search=${encodeURIComponent(search)}`
+
     );
 
-    const data = await response.json();
+    return response.json();
 
-    if (!response.ok) {
-
-        throw new Error(data.error);
-
-    }  
-
-    return data;
 }
-
 
 
 export async function createStudent(studentData) {
