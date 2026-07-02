@@ -1,5 +1,5 @@
 import "./styles/student-form.css";
-
+import Button from "./Button";
 
 function StudentForm({
 
@@ -28,22 +28,31 @@ function StudentForm({
             onSubmit={handleSubmit}
         >
 
-            <input
+        <input
 
-                type="text"
+            type="text"
 
-                placeholder="Student name"
+            placeholder="Student name"
 
-                value={name}
+            value={name}
 
-                onChange={(event) =>
-                    setName(event.target.value)
-                }
-            />
+            maxLength={100}
+
+            required
+
+            onChange={(event) =>
+
+                setName(event.target.value)
+
+            }
+
+        />
 
 
 
             <select
+
+                required
 
                 value={classId}
 
@@ -73,21 +82,23 @@ function StudentForm({
 
 
 
-            <button
+            <Button
+
                 type="submit"
 
-                disabled={loading}
+                loading={loading}
+
             >
 
-                {loading
-                    ? "Loading..."
-                    : editingStudentId
-                        ? "Update Student"
-                        : "Add Student"
-                        
+                {editingStudentId
+
+                    ? "Update Student"
+
+                    : "Add Student"
+
                 }
 
-            </button>
+            </Button>
 
         </form>
     );

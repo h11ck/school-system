@@ -35,24 +35,23 @@ function ClassForm({
 
             />
 
-            <button
+            <Button
+
                 type="submit"
-                disabled={loading}
+
+                loading={loading}
+
             >
 
-                {loading
+                {editingClassId
 
-                    ? "Loading..."
+                    ? "Update Class"
 
-                    : editingClassId
-
-                        ? "Update Class"
-
-                        : "Add Class"
+                    : "Add Class"
 
                 }
 
-            </button>
+            </Button>
 
         </form>
 

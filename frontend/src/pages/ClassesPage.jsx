@@ -13,6 +13,7 @@ import ClassForm from "../components/ClassForm";
 import ClassList from "../components/ClassList";
 import Alert from "../components/Alert";
 import useApiState from "../hooks/useApiState";
+import "./styles/classes-page.css";
 
 function ClassesPage() {
 
@@ -40,20 +41,30 @@ function ClassesPage() {
 
     async function loadClasses() {
 
-        const data = await getClasses();
+        try {
 
-        setClasses(data);
+            const data = await getClasses();
+
+            setClasses(data);
+
+        }
+
+        catch (error) {
+
+            setError(error.message);
+
+        }
 
     }
 
 
-
     useEffect(() => {
+
+        clearError();
 
         loadClasses();
 
     }, []);
-
 
 
     async function handleSubmit(event) {
@@ -64,7 +75,7 @@ function ClassesPage() {
 
             setLoading(true);
 
-            clearError("");
+            clearError();
 
             if (editingClassId) {
 
@@ -102,7 +113,7 @@ function ClassesPage() {
 
         catch (error) {
 
-            clearError(error.message);
+            setError(error.message);
 
         }
 
@@ -118,17 +129,11 @@ function ClassesPage() {
 
     function handleEdit(schoolClass) {
 
-        setEditingClassId(
+        clearError();
 
-            schoolClass.id
+        setEditingClassId(schoolClass.id);
 
-        );
-
-        setName(
-
-            schoolClass.name
-
-        );
+        setName(schoolClass.name);
 
     }
 
@@ -152,17 +157,21 @@ function ClassesPage() {
 
             setLoading(true);
 
-            clearError("");
+            clearError();
 
             await deleteClass(classId);
 
             await loadClasses();
 
+            setEditingClassId(null);
+
+            setName("");
+
         }
 
         catch (error) {
 
-            clearError(error.message);
+            setError(error.message);
 
         }
 
@@ -178,7 +187,7 @@ function ClassesPage() {
 
     return (
 
-        <div>
+        <div className="page-title">
 
             <h1>
 
@@ -191,6 +200,16 @@ function ClassesPage() {
                 message={error}
 
             />
+
+            {editingClassId && (
+
+                <h3>
+
+                    Editing class #{editingClassId}
+
+                </h3>
+
+            )}
 
             <ClassForm
 

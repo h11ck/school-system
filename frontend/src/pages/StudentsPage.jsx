@@ -31,9 +31,6 @@ function StudentsPage() {
 
     const [search, setSearch] = useState("");
 
-    const [sortField, setSortField] = useState("id");
-
-    const [sortDirection, setSortDirection] = useState("asc");
 
     const {
 
@@ -51,19 +48,39 @@ function StudentsPage() {
 
     async function loadStudents(search = "") {
 
-        const data = await getStudents(search);
+        try {
 
-        setStudents(data);
+            const data = await getStudents(search);
+
+            setStudents(data);
+
+        }
+
+        catch (error) {
+
+            setError(error.message);
+
+        }
 
     }
 
 
-
     async function loadClasses() {
 
-        const data = await getClasses();
+        try {
 
-        setClasses(data);
+            const data = await getClasses();
+
+            setClasses(data);
+
+        }
+
+        catch (error) {
+
+            setError(error.message);
+
+        }
+
     }
 
 
@@ -72,9 +89,16 @@ function StudentsPage() {
 
         async function fetchData() {
 
-            await loadStudents();
+            clearError();
 
-            await loadClasses();
+            await Promise.all([
+
+                loadStudents(),
+
+                loadClasses()
+
+            ]);
+
         }
 
         fetchData();
@@ -125,6 +149,8 @@ function StudentsPage() {
             setName("");
 
             setClassId("");
+
+            setSearch("");
 
         }
 
@@ -186,7 +212,7 @@ function StudentsPage() {
 
         setName(student.name);
 
-        setClassId(student.class_id);
+        setClassId(String(student.class_id));
     }
 
     return (
